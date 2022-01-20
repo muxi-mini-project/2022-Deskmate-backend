@@ -1,7 +1,19 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "同桌小程序",
+        "title": "Deskmate",
+        "termsOfService": "http://swagger.io/terrms/",
+        "contact": {
+            "name": "qianren",
+            "email": "1911401642@qq.com"
+        },
+        "version": "1.0.0"
     },
+    "host": "localhost",
+    "basePath": "api/v1/",
     "paths": {}
 }

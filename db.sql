@@ -4,14 +4,17 @@ CREATE DATABASE `deskmate`;
 
 USE `deskmate`;
 
+-- 用户
 CREATE TABLE `users`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
-    `major` VARCHAR(100) NOT NULL,
-    `grade` INT NOT NULL,
+    `college` VARCHAR(100) NOT NULL,-- 学院
+    `major` VARCHAR(100) NOT NULL,-- 专业
+    `grade` VARCHAR(100) NOT NULL,
     PRIMARY KEY(`id`)
 );
 
+-- 名片
 CREATE TABLE `cards`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "名片id", 
     `users_id` INT NOT NULL COMMENT "用户id",
@@ -22,6 +25,7 @@ CREATE TABLE `cards`(
     PRIMARY KEY(`id`)
 );
 
+-- 打卡
 CREATE TABLE `signs`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "打卡id",
     `time` INT NOT NULL COMMENT "打卡天数",
@@ -37,6 +41,7 @@ CREATE TABLE `users_signs`(
     PRIMARY KEY(`id`)
 );
 
+-- 申请同桌
 CREATE TABLE `applications`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "同桌申请id",
     `users_id1` INT NOT NULL COMMENT "申请者",
@@ -44,6 +49,7 @@ CREATE TABLE `applications`(
     PRIMARY KEY(`id`)
 );
 
+-- 标签
 CREATE TABLE `tags`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "标签id",
     `tags_name` VARCHAR(100) NOT NULL COMMENT "标签内容",

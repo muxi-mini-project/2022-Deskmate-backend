@@ -1,4 +1,14 @@
+basePath: api/v1/
+host: localhost
 info:
-  contact: {}
+  contact:
+    email: 1911401642@qq.com
+    name: qianren
+  description: 同桌小程序
+  termsOfService: http://swagger.io/terrms/
+  title: Deskmate
+  version: 1.0.0
 paths: {}
+schemes:
+- http
 swagger: "2.0"
