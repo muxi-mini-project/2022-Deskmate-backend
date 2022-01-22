@@ -1,13 +1,24 @@
-//初始化和链接数据库
 package model
 
 import (
-    //导入MYSQL数据库驱动，这里使用的是GORM库封装的MYSQL驱动导入包，实际上大家看源码就知道，这里等价于导入github.com/go-sql-driver/mysql
-    //这里导入包使用了 _ 前缀代表仅仅是导入这个包，但是我们在代码里面不会直接使用。
-    _ "github.com/jinzhu/gorm/dialects/mysql"//这个我是go get导入的
-    //导入gorm
-    "github.com/jinzhu/gorm"
+	"fmt"
+	"log"
+
+	"github.com/spf13/viper"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-// DB 全局变量
+//DB 全局变量,这两个在func里第一次用
 var DB *gorm.DB
+var err error
+
+func Initdb() *gorm.DB {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", viper.Get("mysql.user"), viper.Get("mysql.password"), viper.Get("mysql.host"), viper.Get("mysql.port"), viper.Get("mysql.db"))
+	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{}) //连接数据库的固定格式
+	if err != nil {
+		log.Fatal(err) //1.打印输s出内容 2.退出应用程序 3.defer函数不会执行
+	}
+	// 注意：port的端口号和main函数的端口号不能相同，不然会按占用处理
+	return DB
+}

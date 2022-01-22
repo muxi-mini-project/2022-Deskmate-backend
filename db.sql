@@ -7,12 +7,14 @@ USE `deskmate`;
 -- 用户
 CREATE TABLE `users`(
     `id` INT NOT NULL AUTO_INCREMENT,
+    `student_id` VARCHAR(100) NOT NULL,-- 学号
+    `password` VARCHAR(100) NOT NULL,-- 密码
     `name` VARCHAR(100) NOT NULL,
     `college` VARCHAR(100) NOT NULL,-- 学院
-    `major` VARCHAR(100) NOT NULL,-- 专业
+    -- `major` VARCHAR(100) NOT NULL,-- 专业
     `grade` VARCHAR(100) NOT NULL,
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 名片
 CREATE TABLE `cards`(
@@ -23,7 +25,7 @@ CREATE TABLE `cards`(
     `declaration` VARCHAR(100) COMMENT "同桌宣言",
     `infor` VARCHAR(100) COMMENT "简要信息",
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 打卡
 CREATE TABLE `signs`(
@@ -31,7 +33,7 @@ CREATE TABLE `signs`(
     `time` INT NOT NULL COMMENT "打卡天数",
     `daily` VARCHAR(255) COMMENT "打卡日报",
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users_signs`(
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -39,7 +41,7 @@ CREATE TABLE `users_signs`(
     `users_id2` INT NOT NULL,
     `signs_id` INT NOT NULL,
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 申请同桌
 CREATE TABLE `applications`(
@@ -47,18 +49,18 @@ CREATE TABLE `applications`(
     `users_id1` INT NOT NULL COMMENT "申请者",
     `users_id2` INT NOT NULL COMMENT "申请对象",
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 标签
 CREATE TABLE `tags`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "标签id",
     `tags_name` VARCHAR(100) NOT NULL COMMENT "标签内容",
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cards_tags`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `cards_id`INT NOT NULL,
     `tags_id`INT NOT NULL,
     PRIMARY KEY(`id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
