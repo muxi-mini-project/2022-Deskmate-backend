@@ -1,4 +1,4 @@
-package user //获取用户信息,比如点击某个标签跳出用户的信息
+package card //获取用户名片信息,比如点击某个标签跳出用户的名片信息
 
 import (
 	"Deskmate/model"
@@ -7,22 +7,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary "用户界面"
-// @Description "获取用户的基本信息"
-// @Tags user
+// @Summary "名片界面"
+// @Description "获取用户的名片信息"
+// @Tags card
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
 // @Success 200 {object} model.Userinfo
 // @Failure 404 "获取失败"
-// Router /api/v1/user [get]
-func Userinfo(c *gin.Context) {
+// Router /api/v1/card [get]
+func Cardinfo(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "验证失败"})
 	}
-	Userinformation, err := model.GetUserInfo(id)
+	Userinformation, err := model.GetCardInfo(id)
 	if err != nil {
 		c.JSON(404, gin.H{"message": "获取失败"})
 	}

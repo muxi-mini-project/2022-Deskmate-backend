@@ -14,11 +14,17 @@ type User struct {
 
 type Card struct {
 	Id          int    `json:"id" gorm:"column:id"`
-	UserId      int    `json:"users_id" gorm:"column:users_id"`
+	UserId      string `json:"users_id" gorm:"column:users_id"`
 	Avatar      string `json:"avatar" gorm:"column:avatar"`
 	NickName    string `json:"nickname" gorm:"column:nickname"`
 	Declaration string `json:"declaration" gorm:"column:declaration"`
 	Infor       string `json:"infor" gorm:"column:infor"`
+	Status      string `json:"status" gorm:"column:status"` //记录是否有同桌
+	Tag1        string `json:"tag1" gorm:"column:tag1"`
+	Tag2        string `json:"tag2" gorm:"column:tag2"`
+	Tag3        string `json:"tag3" gorm:"column:tag3"`
+	Tag4        string `json:"tag4" gorm:"column:tag4"`
+	Tag5        string `json:"tag5" gorm:"column:tag5"`
 }
 
 type Sign struct {
@@ -28,16 +34,16 @@ type Sign struct {
 }
 
 type UserAndSign struct {
-	Id      int `json:"id" gorm:"column:id"`
-	UserId1 int `json:"users_id1" gorm:"column:users_id1"`
-	UserId2 int `json:"users_id2" gorm:"column:users_id2"`
-	SignID  int `json:"signs_id" gorm:"column:signs_id"`
+	Id      int    `json:"id" gorm:"column:id"`
+	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
+	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
+	SignID  int    `json:"signs_id" gorm:"column:signs_id"`
 }
 
 type Apply struct {
-	Id      int `json:"id" gorm:"column:id"`
-	UserId1 int `json:"users_id1" gorm:"column:users_id1"`
-	UserId2 int `json:"users_id2" gorm:"column:users_id2"`
+	Id      int    `json:"id" gorm:"column:id"`
+	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
+	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
 }
 
 type Tag struct {
@@ -49,4 +55,12 @@ type CardAndTag struct {
 	Id     int `json:"id" gorm:"column:id"`
 	CardId int `json:"cards_id" gorm:"column:cards_id"`
 	TagsId int `json:"tags_id" gorm:"column:tags_id"`
+}
+
+type Search struct {
+	Tag string `json:"tag" gorm:"column:id"`
+}
+
+type Respondent struct {
+	StudentID string `json:"id" gorm:"column:id"`
 }

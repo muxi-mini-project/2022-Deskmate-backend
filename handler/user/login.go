@@ -23,7 +23,7 @@ import (
 // @Failure 401{object} error.Error "{"error_code":"10001","message":"password or account wrong."} 身份认证失败 重新登录"
 // @Failure 400{object} error.Error "{"error_code":"20001","message":"Fail."} or {"error_code":"00002","message":"Lack Param Or Param Not Satisfiable."}"
 // @Faliure 500{object} error.Error "{"error_code":"30001","message":"Fail."} 失败"
-// @Router /user/login [post]
+// @Router /api/v1/user [post]
 func Login(c *gin.Context) {
 	var p model.User //model.User就是我们建的users模型表
 	//var u model.Card //model.Card就是我们建的Cards模型表
@@ -73,11 +73,13 @@ func Login(c *gin.Context) {
 
 	var Secret = "vinegar" //加醋
 
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	//token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)//此类型会报错 key is of invalid type
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims) //此类型不会报错
 	signedToken, err := token.SignedString([]byte(Secret))
 	if err != nil {
 		log.Println(err)
 	}
 
-	handler.SendResponse(c, "将student_id作为token保留", signedToken)
+	log.Println(signedToken) //测试一下token到底有没有生成
+	handler.SendResponse(c, "将student_id作为token保留.", signedToken)
 }
