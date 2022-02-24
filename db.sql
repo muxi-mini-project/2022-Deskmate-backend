@@ -22,6 +22,8 @@ CREATE TABLE `cards`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "名片id", 
     `users_id` VARCHAR(255) NOT NULL COMMENT "用户学号",
     `avatar` VARCHAR(255) COMMENT "头像",
+    `sha`   VARCHAR(255) NULL,
+    `path` VARCHAR(255) NULL,
     `nickname` VARCHAR(100) COMMENT "昵称",
     `declaration` VARCHAR(100) COMMENT "同桌宣言",
     `status` VARCHAR(100) NOT NULL,
@@ -35,14 +37,28 @@ CREATE TABLE `cards`(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 打卡
-CREATE TABLE `signs`(
+CREATE TABLE `dailyrecords`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "打卡id",
-    `time` INT NOT NULL COMMENT "打卡天数",
-    `daily` VARCHAR(255) COMMENT "打卡日报",
+    `users_id1` VARCHAR(255) NOT NULL,
+    `users_id2` VARCHAR(255) NOT NULL,
+    `time`  int  COMMENT "打卡天数",
+    `status` VARCHAR(255) COMMENT "打卡状态", -- 默认为进行中，结束后为已结束，用来判断是否需要打卡
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `users_signs`(
+-- 存储打卡消息
+CREATE TABLE `messages`(
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `dailyrecords_id` INT NOT NULL COMMENT "打卡id", -- 这个是来识别对应的某次打卡
+    `time` VARCHAR(255)  NOT NULL COMMENT "发送消息的时间", -- 这里到底用什么类型还得考虑,暂时通过代码获取此刻时间再存入time中
+    `information` VARCHAR(255) COMMENT "打卡的内容",
+    `user_id` VARCHAR(255) COMMENT "发送人",
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `users_signs`(-- 这个表不需要了，全部放打卡的表里了
     `id` INT NOT NULL AUTO_INCREMENT,
     `users_id1` VARCHAR(255) NOT NULL,
     `users_id2` VARCHAR(255) NOT NULL,
@@ -55,7 +71,7 @@ CREATE TABLE `applications`(
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "同桌申请id",
     `users_id1` VARCHAR(255) NOT NULL COMMENT "申请者",
     `users_id2` VARCHAR(255) NOT NULL COMMENT "申请对象",
-    `result` VARCHAR(255) COMMENT "是否同意", -- 默认为拒绝
+    `result` VARCHAR(255) COMMENT "是否同意", -- 默认为空，0为同意，1为拒绝
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

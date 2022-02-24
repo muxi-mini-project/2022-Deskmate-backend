@@ -1,38 +1,61 @@
-package token //好像原来就写了token的，这个是hjj写的，先放这里 1.24
+package middleware //还没有测试过用中间件
 
 import (
-	"errors"
 	"fmt"
 	"log"
-
-	//"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
-//phone唯一对应用户了，不需要获取用户id
-//生成token与验证
-
 type jwtClaims struct {
-	jwt.StandardClaims        //jwt-go包预定义的一些字段
-	Phone              string `json:"phone"`
+	jwt.StandardClaims
+	Uid string `json:"uid"`
 }
 
 var (
-	key        = "miniProject"
-	ExpireTime = 604800 //token过期时间
+	key        = "miniProject" //salt
+	ExpireTime = 3600          //token expire time
 )
 
-//我自己往token里写进去的只有phone
-func GenerateToken(phone string) string {
-	claims := &jwtClaims{
-		Phone: phone,
+func JwtAAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		tokenStr := c.Request.Header.Get("token")
+		if tokenStr == "" {
+			c.String(401, "token invalid")
+			c.Abort()
+			//跳转登录界面
+			return
+		}
+		token, err := verifyToken(tokenStr)
+		if token == nil || err != nil {
+			c.String(401, "token invalid")
+			c.Abort()
+			//跳转登录页面
+			return
+		}
+		if !token.Valid {
+			c.String(401, "token invalid")
+			c.Abort()
+			//跳转登录页面
+			return
+		}
+		claim := token.Claims
+		c.Set("uid", claim.(jwt.MapClaims)["uid"])
+		c.Next()
 	}
-	//签发者和过期时间
+}
+
+func ProduceToken(uid string) string {
+	//id, _ := strconv.Atoi(uid)
+	claims := &jwtClaims{
+		Uid: uid,
+	}
 	claims.IssuedAt = time.Now().Unix()
 	claims.ExpiresAt = time.Now().Add(time.Second * time.Duration(ExpireTime)).Unix()
 	singedToken, err := genToken(*claims)
+	//fmt.Println(singedToken, err)
 	if err != nil {
 		log.Print("produceToken err:")
 		fmt.Println(err)
@@ -42,29 +65,23 @@ func GenerateToken(phone string) string {
 }
 
 func genToken(claims jwtClaims) (string, error) {
+	//token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	singedToken, err := token.SignedString([]byte(key))
+	signedToken, err := token.SignedString([]byte(key))
 	if err != nil {
 		return "", err
 	}
-	return singedToken, nil
+	return signedToken, nil
 }
 
-//验证token
-func VerifyToken(token string) (string, error) {
-	TempToken, err := jwt.ParseWithClaims(token, &jwtClaims{}, func(token *jwt.Token) (interface{}, error) {
+func verifyToken(verifyToken string) (*jwt.Token, error) {
+	token, err := jwt.Parse(verifyToken, func(token *jwt.Token) (i interface{}, err error) {
 		return []byte(key), nil
 	})
 	if err != nil {
-		return "", errors.New("token解析失败")
+		log.Print("verifyToken err:")
+		fmt.Println(err)
+		return nil, err
 	}
-	claims, ok := TempToken.Claims.(*jwtClaims)
-	if !ok {
-		return "", errors.New("发生错误")
-	}
-	if err := TempToken.Claims.Valid(); err != nil {
-		return "", errors.New("发生错误")
-	}
-	fmt.Println(claims.Phone)
-	return claims.Phone, nil
+	return token, nil
 }

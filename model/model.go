@@ -1,5 +1,9 @@
 package model //模型表，用来将结构体与数据库的表进行一个映射
 
+import (
+	"time"
+)
+
 //定义User模型，绑定users表，ORM库操作数据库，需要定义一个struct类型和MYSQL表进行绑定或者叫映射，struct字段和MYSQL表字段一一对应
 //在这里User类型可以代表mysql users表
 type User struct {
@@ -16,6 +20,8 @@ type Card struct {
 	Id          int    `json:"id" gorm:"column:id"`
 	UserId      string `json:"users_id" gorm:"column:users_id"`
 	Avatar      string `json:"avatar" gorm:"column:avatar"`
+	Sha         string `json:"sha" gorm:"column:sha"`
+	Path        string `json:"path" gorm:"column:path"`
 	NickName    string `json:"nickname" gorm:"column:nickname"`
 	Declaration string `json:"declaration" gorm:"column:declaration"`
 	Infor       string `json:"infor" gorm:"column:infor"`
@@ -27,34 +33,28 @@ type Card struct {
 	Tag5        string `json:"tag5" gorm:"column:tag5"`
 }
 
-type Sign struct {
-	Id    int    `json:"id" gorm:"column:id"`
-	Time  int    `json:"time" gorm:"column:time"`
-	Daily string `json:"daily" gorm:"column:daily"`
-}
-
-type UserAndSign struct {
+type Dailyrecords struct {
 	Id      int    `json:"id" gorm:"column:id"`
 	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
 	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
-	SignID  int    `json:"signs_id" gorm:"column:signs_id"`
+	Time    int    `json:"time" gorm:"column:time"`
+	Daily   int    `json:"daily" gorm:"column:daily"`
+	Status  string `json:"status" gorm:"column:status"` //记录此次同桌是否结束
+}
+
+type Message struct {
+	Id             int       `json:"id" gorm:"column:id"`
+	DailyrecordsId int       `json:"dailyrecords_id" gorm:"column:dailyrecords_id"`
+	UserId         string    `json:"users_id" gorm:"column:users_id"`
+	Time           time.Time `json:"time" gorm:"column:time"`
+	Information    string    `json:"information" gorm:"column:information"`
 }
 
 type Apply struct {
 	Id      int    `json:"id" gorm:"column:id"`
 	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
 	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
-}
-
-type Tag struct {
-	Id   int    `json:"id" gorm:"column:id"`
-	Name string `json:"tags_name" gorm:"column:tags_name"`
-}
-
-type CardAndTag struct {
-	Id     int `json:"id" gorm:"column:id"`
-	CardId int `json:"cards_id" gorm:"column:cards_id"`
-	TagsId int `json:"tags_id" gorm:"column:tags_id"`
+	Result  string `json:"result" gorm:"column:result"`
 }
 
 type Search struct {
@@ -64,3 +64,21 @@ type Search struct {
 type Respondent struct {
 	StudentID string `json:"id" gorm:"column:id"`
 }
+
+/* type UserAndSign struct {
+	Id      int    `json:"id" gorm:"column:id"`
+	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
+	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
+	SignID  int    `json:"signs_id" gorm:"column:signs_id"`
+} */
+
+/*type Tag struct {
+	Id   int    `json:"id" gorm:"column:id"`
+	Name string `json:"tags_name" gorm:"column:tags_name"`
+}*/
+
+/* type CardAndTag struct {
+	Id     int `json:"id" gorm:"column:id"`
+	CardId int `json:"cards_id" gorm:"column:cards_id"`
+	TagsId int `json:"tags_id" gorm:"column:tags_id"`
+} */

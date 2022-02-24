@@ -6,13 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary "搜索标签"
+// @Summary 搜索标签
 // @Description "在同桌广场中搜索标签返回对应名片"
 // @Tags square
 // @Accept json
 // @Produce json
-// @Param temp body model.Search true "temp"
-// @Success 200 {object} model.BooksInfo "搜索成功"
+// @Success 200 "搜索成功"
 // @Failure 401 "请重试"
 // @Failure 404 "搜索不到"
 // @Router /square/tag [get]

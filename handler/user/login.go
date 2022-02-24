@@ -3,7 +3,7 @@ package user
 import (
 	"Deskmate/handler"
 	"Deskmate/model"
-	"Deskmate/service/user"
+	"Deskmate/services/user"
 	"encoding/base64"
 	"log"
 	"time"
@@ -12,18 +12,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//@Summary 用户登录
-//@Tags user
-//@Description 一站式登录
-//@Accep applica/json
-//@Produc applic/json
-//@Param object body model.User trun "登录用户信息"
-//Success 200{object} Token "将student_id作为token保留"
-// @Success 200{object} handler.Response "{":"将student_id作为token保留"}"
-// @Failure 401{object} error.Error "{"error_code":"10001","message":"password or account wrong."} 身份认证失败 重新登录"
-// @Failure 400{object} error.Error "{"error_code":"20001","message":"Fail."} or {"error_code":"00002","message":"Lack Param Or Param Not Satisfiable."}"
-// @Faliure 500{object} error.Error "{"error_code":"30001","message":"Fail."} 失败"
-// @Router /api/v1/user [post]
+// @Summary 用户登录
+// @Tags user
+// @Description 一站式登录
+// @Accep applica/json
+// @Produc applic/json
+// @Param object body model.User true "登录用户信息"
+// @Success 200 {object} handler.Response "{":"将student_id作为token保留"}"
+// @Failure 401 "{"error_code":"10001","message":"password or account wrong."} 身份认证失败 重新登录"
+// @Failure 400 "{"error_code":"20001","message":"Fail."} or {"error_code":"00002","message":"Lack Param Or Param Not Satisfiable."}"
+// @Faliure 500 "{"error_code":"30001","message":"Fail."} 失败"
+// @Router /user [post]
 func Login(c *gin.Context) {
 	var p model.User //model.User就是我们建的users模型表
 	//var u model.Card //model.Card就是我们建的Cards模型表

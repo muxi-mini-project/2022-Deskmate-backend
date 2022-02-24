@@ -3,24 +3,22 @@ package card //1.24 第一次设置名片，后面都是修改名片
 import (
 	"Deskmate/handler"
 	"Deskmate/model"
-	"Deskmate/service/user"
+	"Deskmate/services/user"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary "设置名片"
+// @Summary 设置名片
 // @Description "设置名片的昵称，标签，头像，用户宣言"
 // @Tags card
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
-// @Success 200 {object} []model.Organization "{"msg":"新建成功"}"
-// @Failure 203 {object} error.Error "{"error_code":"20001","message":"Fail."}"
-// @Failure 401 {object} error.Error "{"error_code":"10001","message":"Token Invalid."} 身份验证失败 重新登录"
-// @Failure 400 {object} error.Error "{"error_code":"20001","message":"Fail."}or {"error_code":"00002","message":"Lack Param or Param Not Satisfiable."}"
-// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /api/v1/card [post]
+// @Success 200 "设置成功"
+// @Failure 401 "身份验证失败 重新登录"
+// @Failure 400 "设置失败"
+// @Router /card [post]
 func Create(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token) //这里用的是写在service里的解析token函数,并获取用户id即学号

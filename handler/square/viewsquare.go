@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary "同桌广场"
+// @Summary 同桌广场
 // @Description "显示名片数据流"
 // @Tags square
 // @Accept json

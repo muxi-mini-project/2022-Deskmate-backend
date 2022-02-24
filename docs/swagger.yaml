@@ -1,4 +1,60 @@
 basePath: api/v1/
+definitions:
+  model.Card:
+    properties:
+      avatar:
+        type: string
+      declaration:
+        type: string
+      id:
+        type: integer
+      infor:
+        type: string
+      nickname:
+        type: string
+      path:
+        type: string
+      sha:
+        type: string
+      status:
+        description: 记录是否有同桌
+        type: string
+      tag1:
+        type: string
+      tag2:
+        type: string
+      tag3:
+        type: string
+      tag4:
+        type: string
+      tag5:
+        type: string
+      users_id:
+        type: string
+    type: object
+  model.User:
+    properties:
+      college:
+        type: string
+      grade:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      student_id:
+        type: string
+    type: object
+  response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
 host: localhost
 info:
   contact:
@@ -6,9 +62,415 @@ info:
     name: qianren
   description: 同桌小程序
   termsOfService: http://swagger.io/terrms/
-  title: Deskmate
+  title: Deskmat
   version: 1.0.0
-paths: {}
+paths:
+  /apply:
+    get:
+      consumes:
+      - application/json
+      description: 点击 同桌申请 时调用
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"success"}'
+        "400":
+          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+      summary: 显示收到的同桌申请
+      tags:
+      - apply
+    post:
+      consumes:
+      - application/json
+      description: 从名片页面像对方发出申请
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"success", "对象id":"string"}'
+        "400":
+          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+        "500":
+          description: '{"error_code":"30001", "message":"database does not open successful"}
+            失败'
+      summary: 同桌申请
+      tags:
+      - apply
+    put:
+      consumes:
+      - application/json
+      description: 用户确认接受的同桌申请
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"success"}'
+        "400":
+          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"msg":"confirm faided"}'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail.'
+      summary: 确认同桌申请,进入同桌打卡
+      tags:
+      - apply
+  /card:
+    get:
+      consumes:
+      - application/json
+      description: '"获取用户的名片信息"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "404":
+          description: 获取失败
+      summary: 名片界面
+      tags:
+      - card
+    post:
+      consumes:
+      - application/json
+      description: '"设置名片的昵称，标签，头像，用户宣言"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 设置成功
+        "400":
+          description: 设置失败
+        "401":
+          description: 身份验证失败 重新登录
+      summary: 设置名片
+      tags:
+      - card
+    put:
+      consumes:
+      - application/json
+      description: '"修改名片的昵称，标签，头像，用户宣言"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+        "400":
+          description: 修改失败
+        "401":
+          description: 验证失败
+      summary: 修改名片信息
+      tags:
+      - card
+  /card/avatar:
+    post:
+      consumes:
+      - application/json
+      description: '"修改名片头像"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 数据无法更新
+        "404":
+          description: 该用户不存在
+        "500":
+          description: 错误
+      summary: 修改头像
+      tags:
+      - card
+    put:
+      consumes:
+      - application/json
+      description: '"修改名片头像"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 数据无法更新
+        "404":
+          description: 该用户不存在
+        "500":
+          description: 错误
+      summary: 修改头像
+      tags:
+      - card
+  /dailyrecord/card:
+    get:
+      consumes:
+      - application/json
+      description: 点击查看同桌名片
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+      summary: 查看同桌名片
+      tags:
+      - dailyrecord
+  /dailyrecord/end:
+    put:
+      consumes:
+      - application/json
+      description: '"强制中断当前同桌"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 强制中断成功
+        "400":
+          description: 强制中断失败失败
+        "401":
+          description: 身份验证失败 重新登录
+        "500":
+          description: 失败
+      summary: 强制中断同桌
+      tags:
+      - dailyrecord
+  /dailyrecord/message:
+    get:
+      consumes:
+      - application/json
+      description: 查看本次同桌消息记录，包含时间戳
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+      summary: 浏览消息记录
+      tags:
+      - dailyrecord
+  /dailyrecord/send:
+    post:
+      consumes:
+      - application/json
+      description: '"发送一条消息"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 发送成功
+        "400":
+          description: 发送失败
+        "401":
+          description: 身份验证失败 重新登录
+      summary: 发送消息
+      tags:
+      - dailyrecord
+  /dailyrecord/update:
+    put:
+      consumes:
+      - application/json
+      description: '"每日更新打卡天数"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+        "400":
+          description: 更新失败，同桌关系已经解除
+        "401":
+          description: 身份验证失败 重新登录
+        "500":
+          description: 失败
+      summary: 更新打卡
+      tags:
+      - dailyrecord
+  /square:
+    get:
+      consumes:
+      - application/json
+      description: '"显示名片数据流"'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Card'
+            type: array
+      summary: 同桌广场
+      tags:
+      - square
+  /square/tag:
+    get:
+      consumes:
+      - application/json
+      description: '"在同桌广场中搜索标签返回对应名片"'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 搜索成功
+        "401":
+          description: 请重试
+        "404":
+          description: 搜索不到
+      summary: 搜索标签
+      tags:
+      - square
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: '"获取用户的基本信息"'
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "404":
+          description: 获取失败
+      summary: 用户界面
+      tags:
+      - user
+    post:
+      description: 一站式登录
+      parameters:
+      - description: 登录用户信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      responses:
+        "200":
+          description: '{":"将student_id作为token保留"}'
+          schema:
+            $ref: '#/definitions/response'
+        "400":
+          description: '{"error_code":"20001","message":"Fail."} or {"error_code":"00002","message":"Lack
+            Param Or Param Not Satisfiable."}'
+        "401":
+          description: '{"error_code":"10001","message":"password or account wrong."}
+            身份认证失败 重新登录'
+      summary: 用户登录
+      tags:
+      - user
 schemes:
 - http
 swagger: "2.0"

@@ -4,6 +4,8 @@ import (
 	"Deskmate/config"
 	"Deskmate/model"
 	"Deskmate/router"
+	"Deskmate/services/flag_handle"
+	"flag"
 
 	//"Deskmate/config"//参照hjj的
 	"fmt"
@@ -35,7 +37,7 @@ func main() {
 	model.DB = model.Initdb()
 
 	router.Router(r)
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":4016"); err != nil {
 		fmt.Println(err)
 	}
 }
@@ -94,3 +96,24 @@ defer model.DB.Close()*/
 
 	router.Run(":8080")
 }*/
+
+func init() {
+	port := flag.String("port", "4016", "本地监听的端口")
+	platform := flag.String("platform", "gitee", "平台名称，支持gitee/github")
+	token := flag.String("token", "411e5146ac55a87ff07b32e77e6d93e7", "Gitee/Github 的用户授权码")
+	owner := flag.String("owner", "ripples-of-year", "仓库所属空间地址(企业、组织或个人的地址path)")
+	repo := flag.String("repo", "gitee-picture-bed", "仓库路径(path)")
+	path := flag.String("path", "", "文件的路径")
+	branch := flag.String("branch", "master", "分支")
+	flag.Parse()
+	flag_handle.PORT = *port
+	flag_handle.OWNER = *owner
+	flag_handle.REPO = *repo
+	flag_handle.PATH = *path
+	flag_handle.TOKEN = *token
+	flag_handle.PLATFORM = *platform
+	flag_handle.BRANCH = *branch
+	if flag_handle.TOKEN == "" {
+		panic("token 必须！")
+	}
+}

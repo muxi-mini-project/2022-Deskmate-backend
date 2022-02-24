@@ -2,7 +2,7 @@ package apply //创建同桌申请
 
 import (
 	"Deskmate/model"
-	"Deskmate/service/user"
+	"Deskmate/services/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,12 +13,11 @@ import (
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
-// @Param tmprequirement body model.VeRequirePassenger true "乘客需要填写的信息,注意年月日需要以xx年xx月xx日的形式填写,status表示该订单是否完成,1为未完成,2为已完成"
-// @Success 200 {object} model.Res "{"msg":"success", "pid":"string"}"
-// @Failure 401 {object} handler.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
-// @Failure 400 {object} handler.Error "{"error_code":"00001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
-// @Failure 500 {object} handler.Error "{"error_code":"30001", "message":"database does not open successful"} 失败"
-// @Router /app;y [post]
+// @Success 200  "{"msg":"success", "对象id":"string"}"
+// @Failure 401  "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// @Failure 400  "{"error_code":"00001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500  "{"error_code":"30001", "message":"database does not open successful"} 失败"
+// @Router /apply [post]
 func CreateApplication(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 
@@ -45,22 +44,30 @@ func CreateApplication(c *gin.Context) {
 		c.JSON(401, gin.H{
 			"message": "未查询到申请对象是否有同桌.",
 		})
-	} else if result == "有" {
+		return //用return直接返回，不需要用If语句
+	}
+	if result == "有" {
 		c.JSON(200, "对方已有同桌，发送申请失败")
-	} else {
+		return
+	}
+	if result == "无" {
 		var apply model.Apply
 		apply.UserId1 = id
 		apply.UserId2 = respondent.StudentID
+		apply.Result = " "
 		if err := model.DB.Create(&apply).Error; err != nil {
 			c.JSON(200, gin.H{
 				"msg":   "create fail",
 				"error": err,
 			})
+			return
 		}
+
 		c.JSON(200, gin.H{
-			"msg":  "success",
-			"对象id": respondent.StudentID,
+			"msg":           "success",
+			"respondent_id": respondent.StudentID,
 		})
+		return
 	}
 }
 

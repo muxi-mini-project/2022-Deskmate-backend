@@ -2,13 +2,13 @@ package card //1.24 第一次设置名片，后面的是修改名片
 
 import (
 	"Deskmate/model"
-	"Deskmate/service/user"
+	"Deskmate/services/user"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary "修改名片信息"
+// @Summary 修改名片信息
 // @Description "修改名片的昵称，标签，头像，用户宣言"
 // @Tags card
 // @Accept json
@@ -17,8 +17,7 @@ import (
 // @Success 200 "修改成功"
 // @Failure 401 "验证失败"
 // @Failure 400 "修改失败"
-// @Router /api/v1/card [get]
-
+// @Router /card [PUT]
 func Edit(c *gin.Context) {
 	var card model.Card
 	token := c.Request.Header.Get("token")
