@@ -7,7 +7,7 @@ USE `deskmate`;
 -- 用户
 CREATE TABLE `users`(
     `id` INT NOT NULL AUTO_INCREMENT,
-    `student_id` VARCHAR(100) NOT NULL,-- 学号
+    `student_id` VARCHAR(100) NOT NULL UNIQUE COMMENT "用户学号",-- 学号
     `password` VARCHAR(100) NOT NULL,-- 密码
     `name` VARCHAR(100) NOT NULL,
     `college` VARCHAR(100) NOT NULL,-- 学院
@@ -20,19 +20,22 @@ CREATE TABLE `users`(
 CREATE TABLE `cards`(  
     -- 似乎不需要单独列出tag的表，直接设置就可以了
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "名片id", 
-    `users_id` VARCHAR(255) NOT NULL COMMENT "用户学号",
+    `users_id` VARCHAR(255) NOT NULL UNIQUE COMMENT "用户学号", -- 防止一个用户创建多个名片，将学号设置为不能重复
     `avatar` VARCHAR(255) COMMENT "头像",
     `sha`   VARCHAR(255) NULL,
     `path` VARCHAR(255) NULL,
     `nickname` VARCHAR(100) COMMENT "昵称",
     `declaration` VARCHAR(100) COMMENT "同桌宣言",
-    `status` VARCHAR(100) NOT NULL,
+    `status` VARCHAR(100) NOT NULL COMMENT "状态", -- 0为没有同桌，1为有同桌
     `infor` VARCHAR(100) COMMENT "简要信息",
     `tag1`  VARCHAR(100) COMMENT "标签一",
     `tag2`  VARCHAR(100) COMMENT "标签二",
     `tag3`  VARCHAR(100) COMMENT "标签三",
     `tag4`  VARCHAR(100) COMMENT "标签四",
     `tag5`  VARCHAR(100) COMMENT "标签五",
+    `grade` VARCHAR(100) COMMENT "年级",
+    `college` VARCHAR(100) COMMENT "学院",
+    `major` VARCHAR(100) COMMENT "专业",
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -67,11 +70,11 @@ CREATE TABLE `users_signs`(-- 这个表不需要了，全部放打卡的表里�
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 申请同桌
-CREATE TABLE `applications`(
+CREATE TABLE `applycations`( -- 这里把原来的表名applications改成applycations了
     `id` INT NOT NULL AUTO_INCREMENT COMMENT "同桌申请id",
     `users_id1` VARCHAR(255) NOT NULL COMMENT "申请者",
     `users_id2` VARCHAR(255) NOT NULL COMMENT "申请对象",
-    `result` VARCHAR(255) COMMENT "是否同意", -- 默认为空，0为同意，1为拒绝
+    `result` VARCHAR(255) COMMENT "是否同意", -- 默认为空，1为同意，0为拒绝
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -82,9 +85,17 @@ CREATE TABLE `tags`(
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 这里也应该用不到了
 CREATE TABLE `cards_tags`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `cards_id`INT NOT NULL,
     `tags_id`INT NOT NULL,
+    PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `updates`( -- 记录更新
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `dailyrecords_id` INT NOT NULL COMMENT "打卡id",
+    `time` VARCHAR(255)  NOT NULL COMMENT "记录更新的时间",
     PRIMARY KEY(`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

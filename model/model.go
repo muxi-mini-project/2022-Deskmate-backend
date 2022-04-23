@@ -1,8 +1,6 @@
 package model //模型表，用来将结构体与数据库的表进行一个映射
 
-import (
-	"time"
-)
+// "time"
 
 //定义User模型，绑定users表，ORM库操作数据库，需要定义一个struct类型和MYSQL表进行绑定或者叫映射，struct字段和MYSQL表字段一一对应
 //在这里User类型可以代表mysql users表
@@ -31,6 +29,9 @@ type Card struct {
 	Tag3        string `json:"tag3" gorm:"column:tag3"`
 	Tag4        string `json:"tag4" gorm:"column:tag4"`
 	Tag5        string `json:"tag5" gorm:"column:tag5"`
+	College     string `json:"college" gorm:"column:college"` //学院
+	Major       string `json:"major" gorm:"column:major"`     //专业
+	Grade       string `json:"grade" gorm:"column:grade"`     //年级
 }
 
 type Dailyrecords struct {
@@ -38,31 +39,33 @@ type Dailyrecords struct {
 	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
 	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
 	Time    int    `json:"time" gorm:"column:time"`
-	Daily   int    `json:"daily" gorm:"column:daily"`
-	Status  string `json:"status" gorm:"column:status"` //记录此次同桌是否结束
+	// Daily   int    `json:"daily" gorm:"column:daily"` 这里因为我把消息重新弄了个表，忘记删了 // 3.22
+	Status string `json:"status" gorm:"column:status"` //记录此次同桌是否结束
 }
 
 type Message struct {
-	Id             int       `json:"id" gorm:"column:id"`
-	DailyrecordsId int       `json:"dailyrecords_id" gorm:"column:dailyrecords_id"`
-	UserId         string    `json:"users_id" gorm:"column:users_id"`
-	Time           time.Time `json:"time" gorm:"column:time"`
-	Information    string    `json:"information" gorm:"column:information"`
+	Id             int    `json:"id" gorm:"column:id"`
+	DailyrecordsId int    `json:"dailyrecords_id" gorm:"column:dailyrecords_id"`
+	UserId         string `json:"user_id" gorm:"column:user_id"`
+	Time           string `json:"time" gorm:"column:time"`
+	Information    string `json:"information" gorm:"column:information"`
 }
 
-type Apply struct {
+type ReturnMessage struct {
+	Message
+	Name string `json:"name"`
+}
+type Applycation struct {
 	Id      int    `json:"id" gorm:"column:id"`
 	UserId1 string `json:"users_id1" gorm:"column:users_id1"`
 	UserId2 string `json:"users_id2" gorm:"column:users_id2"`
 	Result  string `json:"result" gorm:"column:result"`
 }
 
-type Search struct {
-	Tag string `json:"tag" gorm:"column:id"`
-}
-
-type Respondent struct {
-	StudentID string `json:"id" gorm:"column:id"`
+type Update struct {
+	Id             int `json:"id" gorm:"column:id"`
+	DailyrecordsId int `json:"dailyrecords_id" gorm:"column:dailyrecords_id"`
+	Time           string `json:"time" gorm:"column:time"`
 }
 
 /* type UserAndSign struct {

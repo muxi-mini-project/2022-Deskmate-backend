@@ -1,4 +1,4 @@
-package utils //具类函数存放目录
+package utils //工具类函数存放目录，有些功能要全局使用
 
 import (
 	"log"

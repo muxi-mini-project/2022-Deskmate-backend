@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"encoding/base64"
 	"io/ioutil"
-	"math/rand"
 	"os"
+	"math/rand"
 	"time"
 )
 

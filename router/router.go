@@ -23,7 +23,7 @@ func Router(r *gin.Engine) {
 		g1.POST("", user.Login) //user.Login相当于一个API，每一个路由对应一个功能
 
 		//查看个人信息，该信息是直接从学校读取的，不做修改
-		g1.GET("", user.Userinfo)
+		g1.POST("infor", user.Userinfo)
 
 	}
 
@@ -36,14 +36,16 @@ func Router(r *gin.Engine) {
 		//修改名片
 		g2.PUT("", card.Edit) //put为修改
 
-		//获取名片信息
-		g2.GET("", card.Cardinfo)
+		//获取他人名片信息
+		g2.POST("/infor", card.Cardinfor)
+
+		//获取我的名片信息
+		g2.GET("",card.MyCardinfor)
 
 		//初始化用户头像
 		g2.POST("/avatar", card.ModifyUserProfile)
 
 		//修改用户头像
-
 		g2.PUT("/avatar", card.ModifyUserProfile)
 	}
 
@@ -54,7 +56,7 @@ func Router(r *gin.Engine) {
 		g3.GET("", square.ViewSquare)
 
 		//搜索tag显示对应名片
-		g3.GET("/tag", square.TagSearch)
+		g3.POST("/tag", square.TagSearch)
 	}
 
 	g4 := r.Group("/api/v1/apply")
@@ -65,8 +67,11 @@ func Router(r *gin.Engine) {
 		//游览申请信息
 		g4.GET("", apply.ViewApplication)
 
-		//确认申请信息
+		//同意申请信息
 		g4.PUT("", apply.ApplicationConfirm)
+
+		//拒绝申请信息
+		g4.PUT("/refuse",apply.ApplicationRefuse)
 	}
 
 	//dailyrecord:同桌每日打卡

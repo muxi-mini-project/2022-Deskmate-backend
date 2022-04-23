@@ -1,14 +1,23 @@
-basePath: api/v1/
+basePath: /api/v1/
 definitions:
   model.Card:
     properties:
       avatar:
         type: string
+      college:
+        description: 学院
+        type: string
       declaration:
+        type: string
+      grade:
+        description: 年级
         type: string
       id:
         type: integer
       infor:
+        type: string
+      major:
+        description: 专业
         type: string
       nickname:
         type: string
@@ -32,6 +41,58 @@ definitions:
       users_id:
         type: string
     type: object
+  model.Cardinfor:
+    properties:
+      college:
+        type: string
+      declaration:
+        type: string
+      grade:
+        type: string
+      infor:
+        type: string
+      major:
+        type: string
+      nickname:
+        type: string
+      tag1:
+        type: string
+      tag2:
+        type: string
+      tag3:
+        type: string
+      tag4:
+        type: string
+      tag5:
+        type: string
+    type: object
+  model.Id:
+    properties:
+      users_id:
+        type: string
+    type: object
+  model.Log:
+    properties:
+      password:
+        type: string
+      student_id:
+        type: string
+    type: object
+  model.Record:
+    properties:
+      information:
+        type: string
+    type: object
+  model.Respondent:
+    properties:
+      respondent_id:
+        type: string
+    type: object
+  model.Tag:
+    properties:
+      tag:
+        type: string
+    type: object
   model.User:
     properties:
       college:
@@ -52,10 +113,9 @@ definitions:
       code:
         type: integer
       data: {}
-      msg:
-        type: string
+      msg: {}
     type: object
-host: localhost
+host: 119.3.2.168:4016
 info:
   contact:
     email: 1911401642@qq.com
@@ -102,6 +162,12 @@ paths:
         name: token
         required: true
         type: string
+      - description: 申请对象的学号(id)
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Respondent'
       produces:
       - application/json
       responses:
@@ -114,8 +180,7 @@ paths:
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
         "500":
-          description: '{"error_code":"30001", "message":"database does not open successful"}
-            失败'
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
       summary: 同桌申请
       tags:
       - apply
@@ -129,26 +194,54 @@ paths:
         name: token
         required: true
         type: string
+      - description: 要同意申请的同学学号
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Respondent'
       produces:
       - application/json
       responses:
         "200":
           description: '{"msg":"success"}'
-        "400":
-          description: '{"error_code":"00001", "message":"Fail."} or {"error_code":"00002",
-            "message":"Lack Param Or Param Not Satisfiable."}'
         "401":
           description: '{"msg":"confirm faided"}'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail.'
       summary: 确认同桌申请,进入同桌打卡
+      tags:
+      - apply
+  /apply/refuse:
+    put:
+      consumes:
+      - application/json
+      description: 用户拒绝接受的同桌申请
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 要拒绝申请的同学学号
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Respondent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"success"}'
+        "401":
+          description: '{"msg":"confirm faided"}'
+      summary: 拒绝同桌申请
       tags:
       - apply
   /card:
     get:
       consumes:
       - application/json
-      description: '"获取用户的名片信息"'
+      description: '"获取自己的名片信息"'
       parameters:
       - description: token
         in: header
@@ -161,10 +254,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/model.Card'
+        "401":
+          description: 身份验证失败
         "404":
           description: 获取失败
-      summary: 名片界面
+      summary: 我的名片
       tags:
       - card
     post:
@@ -177,6 +272,12 @@ paths:
         name: token
         required: true
         type: string
+      - description: 名片信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Cardinfor'
       produces:
       - application/json
       responses:
@@ -199,6 +300,12 @@ paths:
         name: token
         required: true
         type: string
+      - description: 名片信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Cardinfor'
       produces:
       - application/json
       responses:
@@ -222,48 +329,47 @@ paths:
         name: token
         required: true
         type: string
-      - description: 文件
-        in: formData
-        name: file
-        required: true
-        type: file
       produces:
       - application/json
       responses:
         "200":
-          description: 数据无法更新
-        "404":
-          description: 该用户不存在
-        "500":
-          description: 错误
+          description: '{"mgs":"success"}'
+          schema:
+            $ref: '#/definitions/model.Card'
+        "400":
+          description: 上传失败,请检查token与其他配置参数是否正确
       summary: 修改头像
       tags:
       - card
-    put:
+  /card/infor:
+    post:
       consumes:
       - application/json
-      description: '"修改名片头像"'
+      description: '"获取他人的名片信息"'
       parameters:
       - description: token
         in: header
         name: token
         required: true
         type: string
-      - description: 文件
-        in: formData
-        name: file
+      - description: 要查看用户的学号
+        in: body
+        name: object
         required: true
-        type: file
+        schema:
+          $ref: '#/definitions/model.Id'
       produces:
       - application/json
       responses:
         "200":
-          description: 数据无法更新
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Card'
+        "401":
+          description: 身份验证失败
         "404":
-          description: 该用户不存在
-        "500":
-          description: 错误
-      summary: 修改头像
+          description: 获取失败
+      summary: 他人名片
       tags:
       - card
   /dailyrecord/card:
@@ -289,7 +395,7 @@ paths:
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
         "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          description: '{"error_code":"30001", "message":"Fail."} 服务器错误'
       summary: 查看同桌名片
       tags:
       - dailyrecord
@@ -310,11 +416,11 @@ paths:
         "200":
           description: 强制中断成功
         "400":
-          description: 强制中断失败失败
+          description: 强制中断关系失败
         "401":
           description: 身份验证失败 重新登录
         "500":
-          description: 失败
+          description: 用户更新状态失败
       summary: 强制中断同桌
       tags:
       - dailyrecord
@@ -356,6 +462,12 @@ paths:
         name: token
         required: true
         type: string
+      - description: 每日打卡的内容
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Record'
       produces:
       - application/json
       responses:
@@ -365,6 +477,8 @@ paths:
           description: 发送失败
         "401":
           description: 身份验证失败 重新登录
+        "500":
+          description: 服务器发生错误
       summary: 发送消息
       tags:
       - dailyrecord
@@ -407,48 +521,43 @@ paths:
             items:
               $ref: '#/definitions/model.Card'
             type: array
+        "404":
+          description: 搜索失败
       summary: 同桌广场
       tags:
       - square
   /square/tag:
-    get:
+    post:
       consumes:
       - application/json
       description: '"在同桌广场中搜索标签返回对应名片"'
+      parameters:
+      - description: 输入要搜索的标签
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Tag'
       produces:
       - application/json
       responses:
         "200":
           description: 搜索成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Card'
+            type: array
         "401":
-          description: 请重试
+          description: Lack Param Or Param Not Satisfiable.
         "404":
-          description: 搜索不到
+          description: 搜索失败
       summary: 搜索标签
       tags:
       - square
   /user:
-    get:
+    post:
       consumes:
       - application/json
-      description: '"获取用户的基本信息"'
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功
-        "404":
-          description: 获取失败
-      summary: 用户界面
-      tags:
-      - user
-    post:
       description: 一站式登录
       parameters:
       - description: 登录用户信息
@@ -456,7 +565,9 @@ paths:
         name: object
         required: true
         schema:
-          $ref: '#/definitions/model.User'
+          $ref: '#/definitions/model.Log'
+      produces:
+      - application/json
       responses:
         "200":
           description: '{":"将student_id作为token保留"}'
@@ -469,6 +580,34 @@ paths:
           description: '{"error_code":"10001","message":"password or account wrong."}
             身份认证失败 重新登录'
       summary: 用户登录
+      tags:
+      - user
+  /user/infor:
+    post:
+      consumes:
+      - application/json
+      description: '"获取用户的基本信息"'
+      parameters:
+      - description: 用户学号
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.Id'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 搜索成功
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+        "401":
+          description: 身份验证失败
+        "404":
+          description: 获取基本信息失败
+      summary: 用户界面
       tags:
       - user
 schemes:

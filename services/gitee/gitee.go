@@ -23,8 +23,8 @@ func (serve *GiteeServe) Del(filepath, sha string) string {
 }
 
 func PushGitee(filename, content string) (string, string, string) {
-	url := "https://gitee.com/api/v5/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + flag_handle.PATH + "/" + filename
-
+	// url := "https://gitee.com/api/v5/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + flag_handle.PATH + "/" + filename
+	url := "https://api.github.com/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + flag_handle.PATH + "/" + filename
 	// 初始化请求与响应
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()
@@ -82,8 +82,8 @@ func PushGitee(filename, content string) (string, string, string) {
 
 func DelFile(filepath, sha string) string {
 
-	url := "https://gitee.com/api/v5/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + filepath
-
+	// url := "https://gitee.com/api/v5/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + filepath
+	url := "https://api.github.com/repos/" + flag_handle.OWNER + "/" + flag_handle.REPO + "/contents/" + filepath
 	// 初始化请求与响应
 	req := fasthttp.AcquireRequest()
 	resp := fasthttp.AcquireResponse()

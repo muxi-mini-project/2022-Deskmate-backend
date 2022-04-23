@@ -83,20 +83,23 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "要同意申请的同学学号",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Respondent"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "{\"msg\":\"success\"}"
                     },
-                    "400": {
-                        "description": "{\"error_code\":\"00001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}"
-                    },
                     "401": {
                         "description": "{\"msg\":\"confirm faided\"}"
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail."
                     }
                 }
             },
@@ -119,6 +122,15 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "申请对象的学号(id)",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Respondent"
+                        }
                     }
                 ],
                 "responses": {
@@ -132,14 +144,55 @@ var doc = `{
                         "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录"
                     },
                     "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"database does not open successful\"} 失败"
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败"
+                    }
+                }
+            }
+        },
+        "/apply/refuse": {
+            "put": {
+                "description": "用户拒绝接受的同桌申请",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "apply"
+                ],
+                "summary": "拒绝同桌申请",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "要拒绝申请的同学学号",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Respondent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"success\"}"
+                    },
+                    "401": {
+                        "description": "{\"msg\":\"confirm faided\"}"
                     }
                 }
             }
         },
         "/card": {
             "get": {
-                "description": "\"获取用户的名片信息\"",
+                "description": "\"获取自己的名片信息\"",
                 "consumes": [
                     "application/json"
                 ],
@@ -149,7 +202,7 @@ var doc = `{
                 "tags": [
                     "card"
                 ],
-                "summary": "名片界面",
+                "summary": "我的名片",
                 "parameters": [
                     {
                         "type": "string",
@@ -163,8 +216,11 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/model.Card"
                         }
+                    },
+                    "401": {
+                        "description": "身份验证失败"
                     },
                     "404": {
                         "description": "获取失败"
@@ -190,6 +246,15 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "名片信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Cardinfor"
+                        }
                     }
                 ],
                 "responses": {
@@ -223,6 +288,15 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "名片信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Cardinfor"
+                        }
                     }
                 ],
                 "responses": {
@@ -239,46 +313,6 @@ var doc = `{
             }
         },
         "/card/avatar": {
-            "put": {
-                "description": "\"修改名片头像\"",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "card"
-                ],
-                "summary": "修改头像",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "文件",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "数据无法更新"
-                    },
-                    "404": {
-                        "description": "该用户不存在"
-                    },
-                    "500": {
-                        "description": "错误"
-                    }
-                }
-            },
             "post": {
                 "description": "\"修改名片头像\"",
                 "consumes": [
@@ -298,24 +332,64 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "文件",
-                        "name": "file",
-                        "in": "formData",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "数据无法更新"
+                        "description": "{\"mgs\":\"success\"}",
+                        "schema": {
+                            "$ref": "#/definitions/model.Card"
+                        }
+                    },
+                    "400": {
+                        "description": "上传失败,请检查token与其他配置参数是否正确"
+                    }
+                }
+            }
+        },
+        "/card/infor": {
+            "post": {
+                "description": "\"获取他人的名片信息\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "card"
+                ],
+                "summary": "他人名片",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "要查看用户的学号",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Card"
+                        }
+                    },
+                    "401": {
+                        "description": "身份验证失败"
                     },
                     "404": {
-                        "description": "该用户不存在"
-                    },
-                    "500": {
-                        "description": "错误"
+                        "description": "获取失败"
                     }
                 }
             }
@@ -353,7 +427,7 @@ var doc = `{
                         "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录"
                     },
                     "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败"
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 服务器错误"
                     }
                 }
             }
@@ -385,13 +459,13 @@ var doc = `{
                         "description": "强制中断成功"
                     },
                     "400": {
-                        "description": "强制中断失败失败"
+                        "description": "强制中断关系失败"
                     },
                     "401": {
                         "description": "身份验证失败 重新登录"
                     },
                     "500": {
-                        "description": "失败"
+                        "description": "用户更新状态失败"
                     }
                 }
             }
@@ -454,6 +528,15 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "每日打卡的内容",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Record"
+                        }
                     }
                 ],
                 "responses": {
@@ -465,6 +548,9 @@ var doc = `{
                     },
                     "401": {
                         "description": "身份验证失败 重新登录"
+                    },
+                    "500": {
+                        "description": "服务器发生错误"
                     }
                 }
             }
@@ -529,12 +615,15 @@ var doc = `{
                                 "$ref": "#/definitions/model.Card"
                             }
                         }
+                    },
+                    "404": {
+                        "description": "搜索失败"
                     }
                 }
             }
         },
         "/square/tag": {
-            "get": {
+            "post": {
                 "description": "\"在同桌广场中搜索标签返回对应名片\"",
                 "consumes": [
                     "application/json"
@@ -546,52 +635,45 @@ var doc = `{
                     "square"
                 ],
                 "summary": "搜索标签",
+                "parameters": [
+                    {
+                        "description": "输入要搜索的标签",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Tag"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "搜索成功"
+                        "description": "搜索成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Card"
+                            }
+                        }
                     },
                     "401": {
-                        "description": "请重试"
+                        "description": "Lack Param Or Param Not Satisfiable."
                     },
                     "404": {
-                        "description": "搜索不到"
+                        "description": "搜索失败"
                     }
                 }
             }
         },
         "/user": {
-            "get": {
-                "description": "\"获取用户的基本信息\"",
+            "post": {
+                "description": "一站式登录",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "用户界面",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "成功"
-                    },
-                    "404": {
-                        "description": "获取失败"
-                    }
-                }
-            },
-            "post": {
-                "description": "一站式登录",
                 "tags": [
                     "user"
                 ],
@@ -603,7 +685,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/model.Log"
                         }
                     }
                 ],
@@ -622,6 +704,49 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user/infor": {
+            "post": {
+                "description": "\"获取用户的基本信息\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "用户界面",
+                "parameters": [
+                    {
+                        "description": "用户学号",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "搜索成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "身份验证失败"
+                    },
+                    "404": {
+                        "description": "获取基本信息失败"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -631,13 +756,25 @@ var doc = `{
                 "avatar": {
                     "type": "string"
                 },
+                "college": {
+                    "description": "学院",
+                    "type": "string"
+                },
                 "declaration": {
+                    "type": "string"
+                },
+                "grade": {
+                    "description": "年级",
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "infor": {
+                    "type": "string"
+                },
+                "major": {
+                    "description": "专业",
                     "type": "string"
                 },
                 "nickname": {
@@ -673,6 +810,87 @@ var doc = `{
                 }
             }
         },
+        "model.Cardinfor": {
+            "type": "object",
+            "properties": {
+                "college": {
+                    "type": "string"
+                },
+                "declaration": {
+                    "type": "string"
+                },
+                "grade": {
+                    "type": "string"
+                },
+                "infor": {
+                    "type": "string"
+                },
+                "major": {
+                    "type": "string"
+                },
+                "nickname": {
+                    "type": "string"
+                },
+                "tag1": {
+                    "type": "string"
+                },
+                "tag2": {
+                    "type": "string"
+                },
+                "tag3": {
+                    "type": "string"
+                },
+                "tag4": {
+                    "type": "string"
+                },
+                "tag5": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Id": {
+            "type": "object",
+            "properties": {
+                "users_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Log": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "student_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Record": {
+            "type": "object",
+            "properties": {
+                "information": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Respondent": {
+            "type": "object",
+            "properties": {
+                "respondent_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Tag": {
+            "type": "object",
+            "properties": {
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
         "model.User": {
             "type": "object",
             "properties": {
@@ -703,9 +921,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "data": {},
-                "msg": {
-                    "type": "string"
-                }
+                "msg": {}
             }
         }
     }
@@ -723,8 +939,8 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0.0",
-	Host:        "localhost",
-	BasePath:    "api/v1/",
+	Host:        "119.3.2.168:4016",
+	BasePath:    "/api/v1/",
 	Schemes:     []string{"http"},
 	Title:       "Deskmat",
 	Description: "同桌小程序",
